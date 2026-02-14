@@ -27,7 +27,7 @@ while [[ true ]]; do
 		printf "Total capture time: $timeinminutes min $timeinseconds sec\n"
 		printf "#############################\n"
 	elif [[ $option -eq 1 ]]; then
-		dns_ips=$(tshark -r $1 -Y "dns.flags.response==1" -T fields -e dns.a -e dns.resp.name | tr , '\n' | awk '$1!="" {print $1,$2}' | sort -u | awk '$2!=""' | tr ' ' '\t')
+		dns_ips=$(tshark -r $1 -Y "dns.flags.response==1" -T fields -e dns.a -e dns.resp.name | tr , '\n' | awk '$1!=""' | awk '$2!="" {print $1, $2}' | tr ' ' '\t')
 		printf "\n"
 		printf "#############################\n"
 		printf "***********DNS A Records*****************\n"

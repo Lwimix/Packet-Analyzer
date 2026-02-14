@@ -15,8 +15,8 @@ while [[ true ]]; do
 		host_ips=$(tshark -r $1 -Y "http.request.method == GET" -T fields -e ip.src -e eth.src | tr , '\n' | sort -u | awk '{print $1,$2}' | tr ' ' '\t')
 		startofcapture=$(tshark -r $1 -o gui.column.format:"Time,%Yut" | sort -n | head -1)
 		endofcapture=$(tshark -r $1 -o gui.column.format:"Time,%Yut" | sort -nr | head -1)
-		timeinminutes=$(tshark -r 2014-11-08-done/2014-11-08-traffic-analysis-exercise.pcap -Tfields -e frame.time_relative | sort -nr | head -1 | awk '{print $1 / 60}' | cut -d '.' -f1)
-		timeinseconds=$(tshark -r 2014-11-08-done/2014-11-08-traffic-analysis-exercise.pcap -Tfields -e frame.time_relative | sort -nr | head -1 | awk '{print $1 % 60}' | cut -d '.' -f1)
+		timeinminutes=$(tshark -r $1 -Tfields -e frame.time_relative | sort -nr | head -1 | awk '{print $1 / 60}' | cut -d '.' -f1)
+		timeinseconds=$(tshark -r $1 -Tfields -e frame.time_relative | sort -nr | head -1 | awk '{print $1 % 60}' | cut -d '.' -f1)
 		printf "\n"
 		printf "#############################\n"
 		printf "*********General Information on Host[s]**********\n\n"
@@ -27,7 +27,7 @@ while [[ true ]]; do
 		printf "Total capture time: $timeinminutes min $timeinseconds sec\n"
 		printf "#############################\n"
 	elif [[ $option -eq 1 ]]; then
-		dns_ips=$(tshark -r 2014-11-08-done/2014-11-08-traffic-analysis-exercise.pcap -Y "dns.flags.response==1" -T fields -e dns.a -e dns.resp.name | tr , '\n' | awk '$1!="" {print $1,$2}' | sort -u | awk '$2!=""' | tr ' ' '\t')
+		dns_ips=$(tshark -r $1 -Y "dns.flags.response==1" -T fields -e dns.a -e dns.resp.name | tr , '\n' | awk '$1!="" {print $1,$2}' | sort -u | awk '$2!=""' | tr ' ' '\t')
 		printf "\n"
 		printf "#############################\n"
 		printf "***********DNS A Records*****************\n"

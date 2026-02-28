@@ -10,7 +10,7 @@ while [[ true ]]; do
 	echo "1: DNS Records"
 	echo "2: NBNS: NetBios Name Service"
 	printf "\n"
-	read option
+	read -r option
 	if [[ $option -eq 0 ]]; then #Gen Info
 		host_ips=$(tshark -r $1 -Y "http.request.method == GET" -T fields -e ip.src -e eth.src | tr , '\n' | sort -u | awk '{print $1,$2}' | tr ' ' '\t')
 		startofcapture=$(tshark -r $1 -o gui.column.format:"Time,%Yut" | sort -n | head -1)

@@ -12,7 +12,7 @@ while [[ true ]]; do
 	printf "\n"
 	read -r option
 	if [[ $option -eq 0 ]]; then #Gen Info
-		host_ips=$(tshark -r $1 -Y "http.request.method == GET" -T fields -e ip.src -e eth.src | tr , '\n' | sort -u | awk '{print $1,$2}' | tr ' ' '\t')
+		host_ips=$(tshark -r $1 -Y "http.request.method == GET" -Tfields -e ip.src -e eth.src | tr , '\n' | sort -u | awk '{print $1,$2}' | tr ' ' '\t')
 		startofcapture=$(tshark -r $1 -o gui.column.format:"Time,%Yut" | sort -n | head -1)
 		endofcapture=$(tshark -r $1 -o gui.column.format:"Time,%Yut" | sort -nr | head -1)
 		timeinminutes=$(tshark -r $1 -Tfields -e frame.time_relative | sort -nr | head -1 | awk '{print $1 / 60}' | cut -d '.' -f1)
@@ -27,7 +27,7 @@ while [[ true ]]; do
 		printf "Total capture time: $timeinminutes min $timeinseconds sec\n"
 		printf "#############################\n"
 	elif [[ $option -eq 1 ]]; then #DNS
-		dns_ips=$(tshark -r $1 -Y "dns.flags.response==1" -T fields -e dns.a -e dns.resp.name | tr , '\n' | awk '$1!=""' | awk '$2!="" {print $1, $2}' | tr ' ' '\t' |  awk '!seen[$0]++')
+		dns_ips=$(tshark -r $1 -Y "dns.flags.response == 1" -T fields -e dns.a -e dns.resp.name | tr , '\n' | awk '$1!=""' | awk '$2!="" {print $1, $2}' | tr ' ' '\t' |  awk '!seen[$0]++')
 		printf "\n"
 		printf "#############################\n"
 		printf "***********DNS A Records*****************\n"
